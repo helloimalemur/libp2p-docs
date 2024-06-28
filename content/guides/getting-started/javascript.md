@@ -69,7 +69,7 @@ You should select Transports according to the runtime of your application; Node.
 npm install @libp2p/tcp
 ```
 
-Now that we have the module installed, let's configure libp2p to use the Transport. We'll use the `createLibp2pNode` method, which takes a single configuration object as its only parameter. We can add the Transport by passing it into the `transports` array. Create a `src/index.js` file and have the following code in it:
+Now that we have the module installed, let's configure libp2p to use the Transport. We'll use the `createLibp2p` method, which takes a single configuration object as its only parameter. We can add the Transport by passing it into the `transports` array. Create a `src/index.js` file and have the following code in it:
 
 ```js
 import { createLibp2p } from 'libp2p'
@@ -143,7 +143,7 @@ const main = async () => {
   const node = await createLibp2p({
     addresses: {
       // add a listen address (localhost) to accept TCP connections on a random port
-      listen: ['/ip4/192.0.2.0/tcp/0']
+      listen: ['/ip4/127.0.0.1/tcp/0']
     },
     transports: [tcp()],
     connectionEncryption: [noise()],
@@ -182,12 +182,12 @@ libp2p has stopped
 
 Now that we have the basic building blocks of transport, multiplexing, and security in place, we can start communicating!
 
-We can use [`libp2p.ping()`](https://github.com/libp2p/js-libp2p/blob/master/doc/API.md#ping) to dial and send ping messages to another peer. That peer will send back a "pong" message, so that we know that it is still alive. This also enables us to measure the latency between peers.
+We can configure and use [`pingService`](https://libp2p.github.io/js-libp2p/modules/ping.html) to dial and send ping messages to another peer. That peer will send back a "pong" message, so that we know that it is still alive. This also enables us to measure the latency between peers.
 
 We can have our application accepting a peer multiaddress via command line argument and try to ping it. To do so, we'll need to add a couple things. First, require the `process` module so that we can get the command line arguments. Then we'll need to parse the multiaddress from the command line and try to ping it:
 
 ```sh
-npm install multiaddr
+npm install multiaddr @libp2p/ping
 ```
 
 ```javascript
@@ -197,15 +197,21 @@ import { tcp } from '@libp2p/tcp'
 import { noise } from '@chainsafe/libp2p-noise'
 import { mplex } from '@libp2p/mplex'
 import { multiaddr } from 'multiaddr'
+import { ping } from '@libp2p/ping'
 
 const node = await createLibp2p({
   addresses: {
     // add a listen address (localhost) to accept TCP connections on a random port
-    listen: ['/ip4/192.0.2.0/tcp/0']
+    listen: ['/ip4/127.0.0.1/tcp/0']
   },
   transports: [tcp()],
   connectionEncryption: [noise()],
-  streamMuxers: [mplex()]
+  streamMuxers: [mplex()],
+  services: {
+    ping: ping({
+      protocolPrefix: 'ipfs', // default
+    }),
+  },
 })
 
 // start libp2p
@@ -222,7 +228,7 @@ node.getMultiaddrs().forEach((addr) => {
 if (process.argv.length >= 3) {
   const ma = multiaddr(process.argv[2])
   console.log(`pinging remote peer at ${process.argv[2]}`)
-  const latency = await node.ping(ma)
+  const latency = await node.services.ping.ping(ma)
   console.log(`pinged ${process.argv[2]} in ${latency}ms`)
 } else {
   console.log('no remote peer address given, skipping ping')
@@ -259,7 +265,6 @@ listening on addresses:
 /ip4/192.0.2.0/tcp/50777/p2p/QmYZirEPREz9vSRFznxhQbWNya2LXPz5VCahRCT7caTLGm
 pinging remote peer at /ip4/192.0.2.0/tcp/50775/p2p/QmcafwJSsCsnjMo2fyf1doMjin8nrMawfwZiPftBDpahzN
 pinged /ip4/192.0.2.0/tcp/50775/p2p/QmcafwJSsCsnjMo2fyf1doMjin8nrMawfwZiPftBDpahzN in 3ms
-libp2p has stopped
 ```
 
 Success! Our two peers are now communicating over a multiplexed, secure channel.  Sure, they can only say "ping", but it's a start!
@@ -268,7 +273,7 @@ Success! Our two peers are now communicating over a multiplexed, secure channel.
 
 After finishing this tutorial, you should have a look into the [js-libp2p getting started](https://github.com/libp2p/js-libp2p/blob/master/doc/GETTING_STARTED.md) document, which goes from a base configuration like this one, to more custom ones.
 
-You also have a panoply of examples on [js-libp2p repo](https://github.com/libp2p/js-libp2p/tree/master/examples) that you can leverage to learn how to use `js-libp2p` for several different use cases and runtimes.
+You also have a panoply of examples on [js-libp2p repo](https://github.com/libp2p/js-libp2p-examples) that you can leverage to learn how to use `js-libp2p` for several different use cases and runtimes.
 
 [definition_multiaddress]: /reference/glossary/#multiaddr
 [definition_multiplexer]: /reference/glossary/#multiplexer

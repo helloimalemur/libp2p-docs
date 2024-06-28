@@ -8,17 +8,10 @@ weight: 210
 
 Relays are used to traverse NATs by acting as proxies, but this can be expensive
 to scale and maintain, and may result in low-bandwidth, high-latency
-connections. [Hole punching](/concepts/nat/hole-punching) is another technique
+connections. [Hole punching]({{< relref "/concepts/nat/hole-punching.md" >}}) is another technique
 that enables NAT traversal by enabling two nodes behind NATs to communicate
 directly.  However, in addition to relay nodes, it requires another piece of
-infrastructure called signaling servers.
-
-> A signaling server is a server or service that facilitates communication
-> between nodes in a P2P network, specifically in context of setting up,
-> maintaining and terminating a direct communication channel between two peers
-> which are behind NATs. It helps in discovering the external IP address and
-> port of the peers and also in NAT traversal by relaying messages between the
-> peers.
+infrastructure called a [signaling server](../appendix/glossary.md#signaling-server).
 
 The good news is that libp2p offers a hole punching solution which eliminates
 the need for centralized signaling servers and allows the use of distributed
@@ -35,7 +28,7 @@ The DCUtR protocol uses the protocol ID `/libp2p/dcutr` and involves the
 exchange of `Connect` and `Sync` messages.
 
 The DCUtR protocol supports different types of connections, such as TCP and
-[QUIC](../transports/quic.md), the process of establishing a connection is
+[QUIC]({{< relref "/concepts/transports/quic.md" >}}), the process of establishing a connection is
 different for each type.
 
 @Dennis-tra has a [great talk](https://www.youtube.com/watch?v=fyhZWlDbcyM) on

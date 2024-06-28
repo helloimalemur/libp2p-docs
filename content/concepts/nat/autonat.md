@@ -9,7 +9,7 @@ aliases:
 
 ## Background
 
-While the [identify protocol](/concepts/introduction/protocols/identify)
+While the [identify protocol](https://github.com/libp2p/specs/blob/master/identify/README.md)
 allows peers to inform each other about their observed network addresses,
 sometimes these addresses are inaccessible as the peer may be located in a
 private network (i.e., behind a NAT or a firewall).
@@ -28,8 +28,7 @@ which allows nodes to determine whether or not they are behind a NAT.
 
 AutoNAT allows a node to request other peers to dial its presumed public addresses.
 
-For private nodes located behind a NAT, it is strongly recommended:
-to:
+For private nodes located behind a NAT, it is strongly recommended to:
 
 - Not advertise private addresses
 - Get a reservation with a relay to improve connectivity to public networks
@@ -66,7 +65,7 @@ whether or not it is behind a NAT.
 > If the response indicates success, the node is likely not behind a NAT and does
 > not need to use a relay server to improve its connectivity. If the response indicates
 > an error, the node is likely behind a NAT and may need to use a
-> [relay server](/concepts/autonat/dcutr) to communicate with other nodes in the network.
+> [relay server]({{< relref "/concepts/nat/dcutr.md" >}}) to communicate with other nodes in the network.
 
 {{< alert icon="" context="caution">}}
 To prevent

@@ -23,7 +23,6 @@ for the creation of multiple "virtual" connections within a single connection. T
 enables nodes to send multiple streams of messages over separate virtual connections,
 providing a scalable solution that eliminates the bottleneck created by a
 single stream.
-Two libp2p peers may have a single TCP connection and use different port numbers to distinguish streams.
 Then different applications/processes like Kademlia or GossipSub used by an application like IPFS would get their own stream of data and make transmission more efficient.
 Stream multiplexing makes it so that applications or protocols running on top of libp2p think that they’re the only ones running on that connection.
 Another example is when HTTP/2 introduced streams into HTTP,
@@ -51,10 +50,10 @@ and allowing for the seamless transmission of multiple streams of data over a si
 connection.
 {{< /alert >}}
 
-Currently, libp2p supports two stream muxers, [mplex](/concepts/multiplex/mplex)
-and [yamux](/concepts/multiplex/yamux). However, many of the
-[transport protocols](/concepts/transports/overview) available in the libp2p stack
-come with native streams, such as [QUIC](/concepts/transports/quic),
-[WebTransport](/concepts/transports/webtransport), and
-[WebRTC](/concepts/transports/webrtc), and in these cases, libp2p
+Currently, libp2p supports two stream muxers, [mplex]({{< relref "/concepts/multiplex/mplex.md" >}})
+and [yamux]({{< relref "/concepts/multiplex/yamux.md" >}}). However, many of the
+[transport protocols]({{< relref "/concepts/transports/overview.md" >}}) available in the libp2p stack
+come with native streams, such as [QUIC]({{< relref "/concepts/transports/quic.md" >}}),
+[WebTransport]({{< relref "/concepts/transports/webtransport.md" >}}), and
+[WebRTC]({{< relref "/concepts/transports/webrtc.md" >}}), and in these cases, libp2p
 **does not need to perform stream multiplexing** as the protocol already provides it.
